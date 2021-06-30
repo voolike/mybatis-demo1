@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE mapper
+        PUBLIC "-/ /mybatis .org//DTD Mapper 3. 0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.voolike.dao.StudentDAO">
+
+<!--    useGeneratedKeys设置添加操作是否需要回填生成的主键-->
+<!--    keyProperty设置回填的主键值赋值到参数对象的哪个属性-->
+    <insert id="insertStudent" parameterType="com.voolike.pojo.Student" useGeneratedKeys="true" keyProperty="stuId">
+        insert into tb_students(stu_num,stu_name,stu_gender,stu_age)
+        values(#{stuNum},#{stuName},#{stuGender},#{stuAge})
+    </insert>
+
+    <delete id="deleteStudent">
+        delete from tb_students where stu_num=#{stuNum}
+    </delete>
+
+    <update id="updateStudent">
+        update tb_students
+        set
+            stu_name=#{stuName},
+            stu_gender=#{stuGender},
+            stu_age=#{stuAge}
+        where
+            stu_num                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   =#{stuNum}
+    </update>
+
+
+
+<!--  resultType 指定查询结果封装的对象的实体类 -->
+<!--    resultSets  指定当前操作返回的集合类型（可省略）-->
+<!--    <select id="listStudent" resultType="com.voolike.pojo.Student">-->
+<!--        select sid stuId,stu_num stuNum,stu_name stuName,stu_gender stuGender,stu_age stuAge-->
+<!--        from tb_students-->
+<!--    </select>-->
+
+<!--    resultMap标签用于定义实体类和数据表的映射关系（ORM）-->
+    <resultMap id="stuMap" type="Student">
+        <id column="sid" property="stuId"></id>
+        <result column="stu_num" property="stuNum"></result>
+        <result column="stu_name" property="stuName"></result>
+        <result column="stu_gender" property="stuGender"></result>
+        <result column="stu_age" property="stuAge"></result>
+    </resultMap>
+<!--    resultMap用于引用一个实体的映射关系，当配置了resultMap之后，可以省略resultType-->
+    <select id="listStudent" resultMap="stuMap">
+            select sid,stu_num,stu_name,stu_gender,stu_age
+            from tb_students
+    </select>
+
+
+
+    <select id="queryStudent" resultMap="stuMap">
+        select sid,stu_num,stu_name,stu_gender,stu_age
+        from tb_students
+        where stu_num=#{stuNum}
+    </select>
+
+    <select id="listStudentByPage" resultMap="stuMap">
+        select sid,stu_num,stu_name,stu_gender,stu_age
+        from tb_students
+<!--         limit #{arg0},#{arg1}
+              limit #{param1},#{param2}-->
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="getCount" resultType="int">
+        select count(1) from tb_students
+    </select>
+
+</mapper>
